@@ -181,7 +181,7 @@ public class GenerateTableFetch extends AbstractDatabaseFetchProcessor {
 
             // Build a SELECT query with maximum-value columns (if present)
             final String selectQuery = dbAdapter.getSelectStatement(tableName, columnsClause, whereClause, null, null, null);
-            int rowCount = 0;
+            long rowCount = 0;
 
             try (final Connection con = dbcpService.getConnection();
                  final Statement st = con.createStatement()) {
@@ -196,7 +196,7 @@ public class GenerateTableFetch extends AbstractDatabaseFetchProcessor {
 
                 if (resultSet.next()) {
                     // Total row count is in the first column
-                    rowCount = resultSet.getInt(1);
+                    rowCount = resultSet.getLong(1);
 
                     // Update the state map with the newly-observed maximum values
                     ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -221,15 +221,15 @@ public class GenerateTableFetch extends AbstractDatabaseFetchProcessor {
                 logger.error("Unable to execute SQL select query {} due to {}", new Object[]{selectQuery, e});
                 throw new ProcessException(e);
             }
-            final int numberOfFetches = (partitionSize == 0) ? rowCount : (rowCount / partitionSize) + (rowCount % partitionSize == 0 ? 0 : 1);
+            final long numberOfFetches = (partitionSize == 0) ? rowCount : (rowCount / partitionSize) + (rowCount % partitionSize == 0 ? 0 : 1);
 
 
             // Generate SQL statements to read "pages" of data
-            for (int i = 0; i < numberOfFetches; i++) {
+            for (long i = 0; i < numberOfFetches; i++) {
                 FlowFile sqlFlowFile;
 
-                Integer limit = partitionSize == 0 ? null : partitionSize;
-                Integer offset = partitionSize == 0 ? null : i * partitionSize;
+                long limit = partitionSize == 0 ? null : partitionSize;
+                long offset = partitionSize == 0 ? null : i * partitionSize;
                 final String query = dbAdapter.getSelectStatement(tableName, columnNames, whereClause, StringUtils.join(maxValueColumnNameList, ", "), limit, offset);
                 sqlFlowFile = session.create();
                 sqlFlowFile = session.write(sqlFlowFile, out -> {

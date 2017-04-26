@@ -252,13 +252,12 @@ public class PutHiveStreaming extends AbstractProcessor {
     protected volatile UserGroupInformation ugi;
     protected volatile HiveConf hiveConfig;
 
-    protected final AtomicBoolean isInitialized = new AtomicBoolean(false);
+    protected final AtomicBoolean sendHeartBeat = new AtomicBoolean(false);
 
     protected HiveOptions options;
     protected ExecutorService callTimeoutPool;
     protected transient Timer heartBeatTimer;
-    protected AtomicBoolean sendHeartBeat = new AtomicBoolean(false);
-    protected Map<HiveEndPoint, HiveWriter> allWriters;
+    protected Map<HiveEndPoint, HiveWriter> allWriters = Collections.emptyMap();
 
 
     @Override
@@ -651,17 +650,20 @@ public class PutHiveStreaming extends AbstractProcessor {
                 }
             }
         }
+        allWriters = Collections.emptyMap();
 
-        callTimeoutPool.shutdown();
-        try {
-            while (!callTimeoutPool.isTerminated()) {
-                callTimeoutPool.awaitTermination(options.getCallTimeOut(), TimeUnit.MILLISECONDS);
+        if (callTimeoutPool != null) {
+            callTimeoutPool.shutdown();
+            try {
+                while (!callTimeoutPool.isTerminated()) {
+                    callTimeoutPool.awaitTermination(options.getCallTimeOut(), TimeUnit.MILLISECONDS);
+                }
+            } catch (Throwable t) {
+                log.warn("shutdown interrupted on " + callTimeoutPool, t);
             }
-        } catch (Throwable t) {
-            log.warn("shutdown interrupted on " + callTimeoutPool, t);
+            callTimeoutPool = null;
         }
 
-        callTimeoutPool = null;
         ugi = null;
         hiveConfigurator.stopRenewer();
     }

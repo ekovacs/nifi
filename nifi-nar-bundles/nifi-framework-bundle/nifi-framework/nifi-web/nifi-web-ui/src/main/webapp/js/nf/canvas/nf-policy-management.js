@@ -479,7 +479,7 @@ nf.PolicyManagement = (function () {
                 markup += '<div class="fa fa-users" style="margin-right: 5px;"></div>';
             }
 
-            markup += dataContext.component.identity;
+            markup += nf.Common.escapeHtml(dataContext.component.identity);
 
             return markup;
         };
@@ -500,8 +500,22 @@ nf.PolicyManagement = (function () {
 
         // initialize the templates table
         var usersColumns = [
-            {id: 'identity', name: 'User', sortable: true, resizable: true, formatter: identityFormatter},
-            {id: 'actions', name: '&nbsp;', sortable: false, resizable: false, formatter: actionFormatter, width: 100, maxWidth: 100}
+            {
+                id: 'identity',
+                name: 'User',
+                sortable: true,
+                resizable: true,
+                formatter: identityFormatter
+            },
+            {
+                id: 'actions',
+                name: '&nbsp;',
+                sortable: false,
+                resizable: false,
+                formatter: actionFormatter,
+                width: 100,
+                maxWidth: 100
+            }
         ];
         var usersOptions = {
             forceFitColumns: true,

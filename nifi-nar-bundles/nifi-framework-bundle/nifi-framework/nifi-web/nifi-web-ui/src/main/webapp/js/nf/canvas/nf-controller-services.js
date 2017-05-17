@@ -263,8 +263,30 @@ nf.ControllerServices = (function () {
     var initNewControllerServiceDialog = function () {
         // initialize the processor type table
         var controllerServiceTypesColumns = [
-            {id: 'type', name: 'Type', field: 'label', formatter: nf.Common.typeFormatter, sortable: false, resizable: true},
-            {id: 'tags', name: 'Tags', field: 'tags', sortable: false, resizable: true}
+            {
+                id: 'type',
+                name: 'Type',
+                field: 'label',
+                formatter: nf.Common.typeFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'version',
+                name: 'Version',
+                field: 'version',
+                formatter: nf.Common.typeVersionFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'tags',
+                name: 'Tags',
+                field: 'tags',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            }
         ];
 
         // initialize the dataview
@@ -447,10 +469,10 @@ nf.ControllerServices = (function () {
      */
     var nameFormatter = function (row, cell, value, columnDef, dataContext) {
         if (!dataContext.permissions.canRead) {
-            return '<span class="blank">' + dataContext.id + '</span>';
+            return '<span class="blank">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
         }
         
-        return dataContext.component.name;
+        return nf.Common.escapeHtml(dataContext.component.name);
     };
 
     /**
@@ -467,7 +489,7 @@ nf.ControllerServices = (function () {
         if (!dataContext.permissions.canRead) {
             return '';
         }
-        
+
         return nf.Common.substringAfterLast(dataContext.component.type, '.');
     };
 
@@ -487,7 +509,31 @@ nf.ControllerServices = (function () {
         }
 
         if (nf.Common.isDefinedAndNotNull(dataContext.component.parentGroupId)) {
-            return dataContext.component.parentGroupId;
+            // see if this listing is based off a selected process group
+            var selection = nfCanvasUtils.getSelection();
+            if (selection.empty() === false) {
+                var selectedData = selection.datum();
+                if (selectedData.id === dataContext.component.parentGroupId) {
+                    if (selectedData.permissions.canRead) {
+                        return nf.Common.escapeHtml(selectedData.component.name);
+                    } else {
+                        return nf.Common.escapeHtml(selectedData.id);
+                    }
+                }
+            }
+
+            // there's either no selection or the service is defined in an ancestor component
+            var breadcrumbs = nfNgBridge.injector.get('breadcrumbsCtrl').getBreadcrumbs();
+
+            var processGroupLabel = dataContext.component.parentGroupId;
+            $.each(breadcrumbs, function (_, breadcrumbEntity) {
+                if (breadcrumbEntity.id === dataContext.component.parentGroupId) {
+                    processGroupLabel = breadcrumbEntity.label;
+                    return false;
+                }
+            });
+
+            return nf.Common.escapeHtml(processGroupLabel);
         } else {
             return 'Controller'
         }
@@ -648,15 +694,57 @@ nf.ControllerServices = (function () {
 
         // define the column model for the controller services table
         var controllerServicesColumns = [
-            {id: 'moreDetails', name: '&nbsp;', resizable: false, formatter: moreControllerServiceDetails, sortable: true, width: 90, maxWidth: 90, toolTip: 'Sorts based on presence of bulletins'},
-            {id: 'name', name: 'Name', formatter: nameFormatter, sortable: true, resizable: true},
-            {id: 'type', name: 'Type', formatter: typeFormatter, sortable: true, resizable: true},
-            {id: 'state', name: 'State', formatter: controllerServiceStateFormatter, sortable: true, resizeable: true},
-            {id: 'parentGroupId', name: 'Process Group', formatter: groupIdFormatter, sortable: true, resizeable: true}
+            {
+                id: 'moreDetails',
+                name: '&nbsp;',
+                resizable: false,
+                formatter: moreControllerServiceDetails,
+                sortable: true,
+                width: 90,
+                maxWidth: 90,
+                toolTip: 'Sorts based on presence of bulletins'
+            },
+            {
+                id: 'name',
+                name: 'Name',
+                formatter: nameFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'type',
+                name: 'Type',
+                formatter: typeFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'state',
+                name: 'State',
+                formatter: controllerServiceStateFormatter,
+                sortable: true,
+                resizeable: true
+            },
+            {
+                id: 'parentGroupId',
+                name: 'Process Group',
+                formatter: groupIdFormatter,
+                sortable: true,
+                resizeable: true
+            }
         ];
 
         // action column should always be last
-        controllerServicesColumns.push({id: 'actions', name: '&nbsp;', resizable: false, formatter: controllerServiceActionFormatter, sortable: false, width: 90, maxWidth: 90});
+        controllerServicesColumns.push(
+            {
+                id: 'actions',
+                name: '&nbsp;',
+                resizable: false,
+                formatter: controllerServiceActionFormatter,
+                sortable: false,
+                width: 90,
+                maxWidth: 90
+            });
 
         // initialize the dataview
         var controllerServicesData = new Slick.Data.DataView({
@@ -848,7 +936,7 @@ nf.ControllerServices = (function () {
     return {
         /**
          * Initializes the status page.
-         * 
+         *
          * @param {jQuery} serviceTable
          */
         init: function (serviceTable) {

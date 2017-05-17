@@ -260,24 +260,47 @@ nf.ng.ProcessorComponent = function (serviceProvider) {
              */
             filter: {
 
-                /**
-                 * Initialize the filter.
-                 */
-                init: function () {
-                    // initialize the processor type table
-                    var processorTypesColumns = [
-                        {id: 'type', name: 'Type', field: 'label', formatter: nf.Common.typeFormatter, sortable: true, resizable: true},
-                        {id: 'tags', name: 'Tags', field: 'tags', sortable: true, resizable: true}
-                    ];
-                    var processorTypesOptions = {
-                        forceFitColumns: true,
-                        enableTextSelectionOnCells: true,
-                        enableCellNavigation: true,
-                        enableColumnReorder: false,
-                        autoEdit: false,
-                        multiSelect: false,
-                        rowHeight: 24
-                    };
+                    /**
+                     * Initialize the filter.
+                     */
+                    init: function () {
+                        // initialize the processor type table
+                        var processorTypesColumns = [
+                            {
+                                id: 'type',
+                                name: 'Type',
+                                field: 'label',
+                                formatter: nf.Common.typeFormatter,
+                                sortable: true,
+                                resizable: true
+                            },
+                            {
+                                id: 'version',
+                                name: 'Version',
+                                field: 'version',
+                                formatter: nf.Common.typeVersionFormatter,
+                                sortable: true,
+                                resizable: true
+                            },
+                            {
+                                id: 'tags',
+                                name: 'Tags',
+                                field: 'tags',
+                                sortable: true,
+                                resizable: true,
+                                formatter: nf.Common.genericValueFormatter
+                            }
+                        ];
+
+                        var processorTypesOptions = {
+                            forceFitColumns: true,
+                            enableTextSelectionOnCells: true,
+                            enableCellNavigation: true,
+                            enableColumnReorder: false,
+                            autoEdit: false,
+                            multiSelect: false,
+                            rowHeight: 24
+                        };
 
                     // initialize the dataview
                     var processorTypesData = new Slick.Data.DataView({
@@ -441,7 +464,7 @@ nf.ng.ProcessorComponent = function (serviceProvider) {
              */
             init: function () {
                 var self = this;
-                
+
                 this.filter.init();
 
                 // configure the new processor dialog
@@ -522,7 +545,7 @@ nf.ng.ProcessorComponent = function (serviceProvider) {
 
         /**
          * The drag icon for the toolbox component.
-         * 
+         *
          * @param event
          * @returns {*|jQuery|HTMLElement}
          */

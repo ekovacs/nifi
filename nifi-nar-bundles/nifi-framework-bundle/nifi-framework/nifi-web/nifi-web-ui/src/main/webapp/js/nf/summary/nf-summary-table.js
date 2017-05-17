@@ -244,12 +244,12 @@ nf.SummaryTable = (function () {
 
         // formatter for io
         var ioFormatter = function (row, cell, value, columnDef, dataContext) {
-            return dataContext.read + ' / ' + dataContext.written;
+            return nf.Common.escapeHtml(dataContext.read) + ' / ' + nf.Common.escapeHtml(dataContext.written);
         };
 
         // formatter for tasks
         var taskTimeFormatter = function (row, cell, value, columnDef, dataContext) {
-            return nf.Common.formatInteger(dataContext.tasks) + ' / ' + dataContext.tasksDuration;
+            return nf.Common.formatInteger(dataContext.tasks) + ' / ' + nf.Common.escapeHtml(dataContext.tasksDuration);
         };
 
         // function for formatting the last accessed time
@@ -261,7 +261,7 @@ nf.SummaryTable = (function () {
         var runStatusFormatter = function (row, cell, value, columnDef, dataContext) {
             var activeThreadCount = '';
             if (nf.Common.isDefinedAndNotNull(dataContext.activeThreadCount) && dataContext.activeThreadCount > 0) {
-                activeThreadCount = '(' + dataContext.activeThreadCount + ')';
+                activeThreadCount = '(' + nf.Common.escapeHtml(dataContext.activeThreadCount) + ')';
             }
             var classes = nf.Common.escapeHtml(value.toLowerCase());
             switch(nf.Common.escapeHtml(value.toLowerCase())) {
@@ -288,7 +288,14 @@ nf.SummaryTable = (function () {
         };
 
         // define the input, read, written, and output columns (reused between both tables)
-        var nameColumn = {id: 'name', field: 'name', name: 'Name', sortable: true, resizable: true};
+        var nameColumn = {
+            id: 'name',
+            field: 'name',
+            name: 'Name',
+            sortable: true,
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
+        };
         var runStatusColumn = {
             id: 'runStatus',
             field: 'runStatus',
@@ -303,7 +310,8 @@ nf.SummaryTable = (function () {
             toolTip: 'Count / data size in the last 5 min',
             sortable: true,
             defaultSortAsc: false,
-            resizable: true
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
         };
         var ioColumn = {
             id: 'io',
@@ -322,7 +330,8 @@ nf.SummaryTable = (function () {
             toolTip: 'Count / data size in the last 5 min',
             sortable: true,
             defaultSortAsc: false,
-            resizable: true
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
         };
         var tasksTimeColumn = {
             id: 'tasks',
@@ -349,7 +358,14 @@ nf.SummaryTable = (function () {
                 toolTip: 'Sorts based on presence of bulletins'
             },
             nameColumn,
-            {id: 'type', field: 'type', name: 'Type', sortable: true, resizable: true},
+            {
+                id: 'type',
+                field: 'type',
+                name: 'Type',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             runStatusColumn,
             inputColumn,
             ioColumn,
@@ -556,7 +572,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster processor column model
         var clusterProcessorsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             runStatusColumn,
             inputColumn,
             ioColumn,
@@ -626,7 +649,7 @@ nf.SummaryTable = (function () {
             if (nf.Common.isDefinedAndNotNull(dataContext.percentUseBytes)) {
                 percentUseBytes = dataContext.percentUseBytes + '%';
             }
-            return percentUseCount + ' / ' + percentUseBytes;
+            return nf.Common.escapeHtml(percentUseCount) + ' / ' + nf.Common.escapeHtml(percentUseBytes);
         };
 
         // define the input, read, written, and output columns (reused between both tables)
@@ -636,7 +659,8 @@ nf.SummaryTable = (function () {
             name: '<span class="queued-title">Queue</span>&nbsp;/&nbsp;<span class="queued-size-title">Size</span>',
             sortable: true,
             defaultSortAsc: false,
-            resize: true
+            resize: true,
+            formatter: nf.Common.genericValueFormatter
         };
 
         // define the backpressure column (reused between both tables)
@@ -661,14 +685,29 @@ nf.SummaryTable = (function () {
                 width: 50,
                 maxWidth: 50
             },
-            {id: 'sourceName', field: 'sourceName', name: 'Source Name', sortable: true, resizable: true},
-            {id: 'name', field: 'name', name: 'Name', sortable: true, resizable: true, formatter: valueFormatter},
+            {
+                id: 'sourceName',
+                field: 'sourceName',
+                name: 'Source Name',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'name',
+                field: 'name',
+                name: 'Name',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
             {
                 id: 'destinationName',
                 field: 'destinationName',
                 name: 'Destination Name',
                 sortable: true,
-                resizable: true
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
             },
             inputColumn,
             queueColumn,
@@ -839,7 +878,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster processor column model
         var clusterConnectionsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             inputColumn,
             queueColumn,
             backpressureColumn,
@@ -924,7 +970,8 @@ nf.SummaryTable = (function () {
             toolTip: 'Count / data size transferred to and from connections in the last 5 min',
             resizable: true,
             defaultSortAsc: false,
-            sortable: true
+            sortable: true,
+            formatter: nf.Common.genericValueFormatter
         };
         var sentColumn = {
             id: 'sent',
@@ -933,7 +980,8 @@ nf.SummaryTable = (function () {
             toolTip: 'Count / data size in the last 5 min',
             sortable: true,
             defaultSortAsc: false,
-            resizable: true
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
         };
         var receivedColumn = {
             id: 'received',
@@ -942,13 +990,21 @@ nf.SummaryTable = (function () {
             toolTip: 'Count / data size in the last 5 min',
             sortable: true,
             defaultSortAsc: false,
-            resizable: true
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
         };
 
         // define the column model for the summary table
         var processGroupsColumnModel = [
             moreDetailsColumn,
-            {id: 'name', field: 'name', name: 'Name', sortable: true, resizable: true, formatter: valueFormatter},
+            {
+                id: 'name',
+                field: 'name',
+                name: 'Name',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
             transferredColumn,
             inputColumn,
             ioColumn,
@@ -1147,7 +1203,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster process groups column model
         var clusterProcessGroupsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             transferredColumn,
             inputColumn,
             ioColumn,
@@ -1393,7 +1456,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster input port column model
         var clusterInputPortsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             runStatusColumn,
             outputColumn
         ];
@@ -1635,7 +1705,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster output port column model
         var clusterOutputPortsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             runStatusColumn,
             inputColumn
         ];
@@ -1692,7 +1769,7 @@ nf.SummaryTable = (function () {
         var transmissionStatusFormatter = function (row, cell, value, columnDef, dataContext) {
             var activeThreadCount = '';
             if (nf.Common.isDefinedAndNotNull(dataContext.activeThreadCount) && dataContext.activeThreadCount > 0) {
-                activeThreadCount = '(' + dataContext.activeThreadCount + ')';
+                activeThreadCount = '(' + nf.Common.escapeHtml(dataContext.activeThreadCount) + ')';
             }
 
             // determine what to put in the mark up
@@ -1724,7 +1801,8 @@ nf.SummaryTable = (function () {
             field: 'targetUri',
             name: 'Target URI',
             sortable: true,
-            resizable: true
+            resizable: true,
+            formatter: nf.Common.genericValueFormatter
         };
 
         // define the column model for the summary table
@@ -1934,7 +2012,14 @@ nf.SummaryTable = (function () {
 
         // initialize the cluster remote process group column model
         var clusterRemoteProcessGroupsColumnModel = [
-            {id: 'node', field: 'node', name: 'Node', sortable: true, resizable: true},
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
             targetUriColumn,
             transmissionStatusColumn,
             sentColumn,

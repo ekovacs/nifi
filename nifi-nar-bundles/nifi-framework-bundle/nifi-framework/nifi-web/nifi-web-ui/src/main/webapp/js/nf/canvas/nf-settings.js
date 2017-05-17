@@ -176,10 +176,10 @@ nf.Settings = (function () {
      */
     var nameFormatter = function (row, cell, value, columnDef, dataContext) {
         if (!dataContext.permissions.canRead) {
-            return '<span class="blank">' + dataContext.id + '</span>';
+            return '<span class="blank">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
         }
 
-        return dataContext.component.name;
+        return nf.Common.escapeHtml(dataContext.component.name);
     };
 
     /**
@@ -433,8 +433,30 @@ nf.Settings = (function () {
 
         // initialize the processor type table
         var reportingTaskTypesColumns = [
-            {id: 'type', name: 'Type', field: 'label', formatter: nf.Common.typeFormatter, sortable: false, resizable: true},
-            {id: 'tags', name: 'Tags', field: 'tags', sortable: false, resizable: true}
+            {
+                id: 'type',
+                name: 'Type',
+                field: 'label',
+                formatter: nf.Common.typeFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'version',
+                name: 'Version',
+                field: 'version',
+                formatter: nf.Common.typeVersionFormatter,
+                sortable: true,
+                resizable: true
+            },
+            {
+                id: 'tags',
+                name: 'Tags',
+                field: 'tags',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            }
         ];
 
         // initialize the dataview
@@ -752,10 +774,37 @@ nf.Settings = (function () {
 
         // define the column model for the reporting tasks table
         var reportingTasksColumnModel = [
-            {id: 'moreDetails', name: '&nbsp;', resizable: false, formatter: moreReportingTaskDetails, sortable: true, width: 90, maxWidth: 90, toolTip: 'Sorts based on presence of bulletins'},
-            {id: 'name', name: 'Name', sortable: true, resizable: true, formatter: nameFormatter},
-            {id: 'type', name: 'Type', sortable: true, resizable: true, formatter: typeFormatter},
-            {id: 'state', name: 'Run Status', sortable: true, resizeable: true, formatter: reportingTaskRunStatusFormatter}
+            {
+                id: 'moreDetails',
+                name: '&nbsp;',
+                resizable: false,
+                formatter: moreReportingTaskDetails,
+                sortable: true,
+                width: 90,
+                maxWidth: 90,
+                toolTip: 'Sorts based on presence of bulletins'
+            },
+            {
+                id: 'name',
+                name: 'Name',
+                sortable: true,
+                resizable: true,
+                formatter: nameFormatter
+            },
+            {
+                id: 'type',
+                name: 'Type',
+                sortable: true,
+                resizable: true,
+                formatter: typeFormatter
+            },
+            {
+                id: 'state',
+                name: 'Run Status',
+                sortable: true,
+                resizeable: true,
+                formatter: reportingTaskRunStatusFormatter
+            }
         ];
 
         // action column should always be last
@@ -911,7 +960,7 @@ nf.Settings = (function () {
             $('#read-only-maximum-timer-driven-thread-count-field').addClass('unset').text('Unauthorized');
             $('#read-only-maximum-event-driven-thread-count-field').addClass('unset').text('Unauthorized');
         };
-        
+
         var setEditable = function (editable) {
             if (editable) {
                 $('#general-settings div.editable').show();
@@ -923,7 +972,7 @@ nf.Settings = (function () {
                 $('#settings-save').hide();
             }
         };
-        
+
         var settings = $.Deferred(function (deferred) {
             $.ajax({
                 type: 'GET',
@@ -963,7 +1012,7 @@ nf.Settings = (function () {
                 }
             });
         }).promise();
-            
+
         // load the controller services
         var controllerServicesUri = config.urls.api + '/flow/controller/controller-services';
         var controllerServices = nf.ControllerServices.loadControllerServices(controllerServicesUri, getControllerServicesTable());
@@ -1116,7 +1165,7 @@ nf.Settings = (function () {
                     $('#reporting-task-type-filter').focus();
                 }
             });
-            
+
             // initialize each tab
             initGeneral();
             nf.ControllerServices.init(getControllerServicesTable());
@@ -1151,7 +1200,7 @@ nf.Settings = (function () {
 
         /**
          * Selects the specified controller service.
-         * 
+         *
          * @param {string} controllerServiceId
          */
         selectControllerService: function (controllerServiceId) {
@@ -1164,7 +1213,7 @@ nf.Settings = (function () {
             controllerServiceGrid.scrollRowIntoView(row);
 
             // select the controller services tab
-            $('#settings-tabs').find('li:eq(1)').click();  
+            $('#settings-tabs').find('li:eq(1)').click();
         },
 
         /**

@@ -494,10 +494,25 @@ nf.QueueListing = (function () {
                     sortable: false,
                     resizable: false,
                     width: 75,
-                    maxWidth: 75
+                    maxWidth: 75,
+                    formatter: nf.Common.genericValueFormatter
                 },
-                {id: 'uuid', name: 'UUID', field: 'uuid', sortable: false, resizable: true},
-                {id: 'filename', name: 'Filename', field: 'filename', sortable: false, resizable: true},
+                {
+                    id: 'uuid',
+                    name: 'UUID',
+                    field: 'uuid',
+                    sortable: false,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'filename',
+                    name: 'Filename',
+                    field: 'filename',
+                    sortable: false,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
                 {
                     id: 'size',
                     name: 'File Size',
@@ -542,7 +557,8 @@ nf.QueueListing = (function () {
                     name: 'Node',
                     field: 'clusterNodeAddress',
                     sortable: false,
-                    resizable: true
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
                 });
             }
 

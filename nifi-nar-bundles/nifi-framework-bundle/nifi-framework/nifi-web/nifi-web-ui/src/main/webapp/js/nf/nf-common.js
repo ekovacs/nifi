@@ -44,25 +44,25 @@ $(document).ready(function () {
 
     // show the loading icon when appropriate
     $(document).ajaxStart(function () {
-        // show the loading indicator 
+        // show the loading indicator
         $('div.loading-container').addClass('ajax-loading');
     }).ajaxStop(function () {
-        // hide the loading indicator 
+        // hide the loading indicator
         $('div.loading-container').removeClass('ajax-loading');
     });
-    
+
     // shows the logout link in the message-pane when appropriate and schedule token refresh
     if (nf.Storage.getItem('jwt') !== null) {
         $('#user-logout-container').css('display', 'block');
         nf.Common.scheduleTokenRefresh();
     }
-    
+
     // handle logout
     $('#user-logout').on('click', function () {
         nf.Storage.removeItem('jwt');
         window.location = '/nifi/login';
     });
-    
+
     // handle home
     $('#user-home').on('click', function () {
         if (top !== window) {
@@ -187,8 +187,126 @@ nf.Common = (function () {
         },
 
         /**
+         * Escapes any malicious HTML characters from the value.
+         *
+         * @param row
+         * @param cell
+         * @param value
+         * @param columnDef
+         * @param dataContext
+         * @returns {string}
+         */
+        genericValueFormatter: function (row, cell, value, columnDef, dataContext) {
+            return nf.Common.escapeHtml(value);
+        },
+
+        /**
+         * Formats the bundle of a component type for the new instance dialog.
+         *
+         * @param row
+         * @param cell
+         * @param value
+         * @param columnDef
+         * @param dataContext
+         * @returns {string}
+         */
+        typeBundleFormatter: function (row, cell, value, columnDef, dataContext) {
+            return nf.Common.escapeHtml(nf.Common.formatBundle(dataContext.bundle));
+        },
+
+        /**
+         * Formats the bundle of a component type for the new instance dialog.
+         *
+         * @param row
+         * @param cell
+         * @param value
+         * @param columnDef
+         * @param dataContext
+         * @returns {string}
+         */
+        typeVersionFormatter: function (row, cell, value, columnDef, dataContext) {
+            var markup = '';
+
+            if (nf.Common.isDefinedAndNotNull(dataContext.bundle)) {
+                markup += ('<div style="float: left;">' + nf.Common.escapeHtml(dataContext.bundle.version) + '</div>');
+            } else {
+                markup += '<div style="float: left;">unversioned</div>';
+            }
+
+            if (!nf.Common.isEmpty(dataContext.controllerServiceApis)) {
+                markup += '<div class="controller-service-apis fa fa-list" title="Compatible Controller Service" style="margin-top: 2px; margin-left: 4px;"></div><span class="hidden row-id">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
+            }
+
+            markup += '<div class="clear"></div>';
+
+            return markup;
+        },
+
+        /**
+         * Formatter for the type column.
+         *
+         * @param {type} row
+         * @param {type} cell
+         * @param {type} value
+         * @param {type} columnDef
+         * @param {type} dataContext
+         * @returns {String}
+         */
+        instanceTypeFormatter: function (row, cell, value, columnDef, dataContext) {
+            if (!dataContext.permissions.canRead) {
+                return '';
+            }
+
+            return nf.Common.escapeHtml(nf.Common.formatType(dataContext.component));
+        },
+
+        /**
+         * Formats the bundle of a component instance for the component listing table.
+         *
+         * @param row
+         * @param cell
+         * @param value
+         * @param columnDef
+         * @param dataContext
+         * @returns {string}
+         */
+        instanceBundleFormatter: function (row, cell, value, columnDef, dataContext) {
+            if (!dataContext.permissions.canRead) {
+                return '';
+            }
+
+            return nf.Common.typeBundleFormatter(row, cell, value, columnDef, dataContext.component);
+        },
+
+        /**
+         * Formats the type of this component.
+         *
+         * @param dataContext component datum
+         */
+        formatType: function (dataContext) {
+            var typeString = nf.Common.substringAfterLast(dataContext.type, '.');
+            if (dataContext.bundle.version !== 'unversioned') {
+                typeString += (' ' + dataContext.bundle.version);
+            }
+            return typeString;
+        },
+
+        /**
+         * Formats the bundle label.
+         *
+         * @param bundle
+         */
+        formatBundle: function (bundle) {
+            var groupString = '';
+            if (bundle.group !== 'default') {
+                groupString = bundle.group + ' - ';
+            }
+            return groupString + bundle.artifact;
+        },
+
+        /**
          * Sets the current user.
-         * 
+         *
          * @param currentUser
          */
         setCurrentUser: function (currentUser) {
@@ -203,10 +321,10 @@ nf.Common = (function () {
             if (tokenRefreshInterval !== null) {
                 clearInterval(tokenRefreshInterval);
             }
-            
+
             // set the interval to one hour
             var interval = nf.Common.MILLIS_PER_MINUTE;
-            
+
             var checkExpiration = function () {
                 var expiration = nf.Storage.getItemExpiration('jwt');
 
@@ -231,10 +349,10 @@ nf.Common = (function () {
                     }
                 }
             };
-            
+
             // perform initial check
             checkExpiration();
-            
+
             // schedule subsequent checks
             tokenRefreshInterval = setInterval(checkExpiration, interval);
         },
@@ -247,7 +365,7 @@ nf.Common = (function () {
             if (anonymousUserAlert.data('qtip')) {
                 anonymousUserAlert.qtip('api').destroy(true);
             }
-                        
+
             // alert user's of anonymous access
             anonymousUserAlert.show().qtip($.extend({}, nf.Common.config.tooltipConfig, {
                 content: 'You are accessing with limited authority. Log in or request an account to access with additional authority granted to you by an administrator.',
@@ -258,13 +376,13 @@ nf.Common = (function () {
             }));
 
             // render the anonymous user text
-            $('#current-user').text(nf.Common.ANONYMOUS_USER_TEXT).show();  
+            $('#current-user').text(nf.Common.ANONYMOUS_USER_TEXT).show();
         },
 
         /**
          * Extracts the subject from the specified jwt. If the jwt is not as expected
          * an empty string is returned.
-         * 
+         *
          * @param {string} jwt
          * @returns {string}
          */
@@ -290,7 +408,7 @@ nf.Common = (function () {
 
         /**
          * Determines whether the current user can access provenance.
-         * 
+         *
          * @returns {boolean}
          */
         canAccessProvenance: function () {
@@ -316,7 +434,7 @@ nf.Common = (function () {
 
         /**
          * Determines whether the current user can access counters.
-         * 
+         *
          * @returns {boolean}
          */
         canAccessCounters: function () {
@@ -329,7 +447,7 @@ nf.Common = (function () {
 
         /**
          * Determines whether the current user can modify counters.
-         * 
+         *
          * @returns {boolean}
          */
         canModifyCounters: function () {
@@ -434,7 +552,7 @@ nf.Common = (function () {
         /**
          * Adds a mouse over effect for the specified selector using
          * the specified styles.
-         * 
+         *
          * @argument {string} selector      The selector for the element to add a hover effect for
          * @argument {string} normalStyle   The css style for the normal state
          * @argument {string} overStyle     The css style for the over state
@@ -481,7 +599,7 @@ nf.Common = (function () {
 
         /**
          * Method for handling ajax errors.
-         * 
+         *
          * @argument {object} xhr       The XmlHttpRequest
          * @argument {string} status    The status of the request
          * @argument {string} error     The error
@@ -503,12 +621,12 @@ nf.Common = (function () {
                         }
                     });
                 }
-                
+
                 // close the canvas
                 nf.Common.closeCanvas();
                 return;
             }
-            
+
             // if an error occurs while the splash screen is visible close the canvas show the error message
             if ($('#splash').is(':visible')) {
                 if (xhr.status === 401) {
@@ -599,7 +717,7 @@ nf.Common = (function () {
          */
         closeCanvas: function () {
             nf.Common.showLogoutLink();
-            
+
             // ensure this javascript has been loaded in the nf canvas page
             if (nf.Common.isDefinedAndNotNull(nf.Canvas)) {
                 // hide the splash screen if required
@@ -637,10 +755,10 @@ nf.Common = (function () {
         },
 
         /**
-         * Populates the specified field with the specified value. If the value is 
+         * Populates the specified field with the specified value. If the value is
          * undefined, the field will read 'No value set.' If the value is an empty
          * string, the field will read 'Empty string set.'
-         * 
+         *
          * @argument {string} target        The dom Id of the target
          * @argument {string} value         The value
          */
@@ -657,7 +775,7 @@ nf.Common = (function () {
         /**
          * Clears the specified field. Removes any style that may have been applied
          * by a preceeding call to populateField.
-         * 
+         *
          * @argument {string} target        The dom Id of the target
          */
         clearField: function (target) {
@@ -666,7 +784,7 @@ nf.Common = (function () {
 
         /**
          * Cleans up any tooltips that have been created for the specified container.
-         * 
+         *
          * @param {jQuery} container
          * @param {string} tooltipTarget
          */
@@ -682,7 +800,7 @@ nf.Common = (function () {
 
         /**
          * Formats the tooltip for the specified property.
-         * 
+         *
          * @param {object} propertyDescriptor      The property descriptor
          * @param {object} propertyHistory         The property history
          * @returns {string}
@@ -722,7 +840,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified property (name and value) accordingly.
-         * 
+         *
          * @argument {string} name      The name of the property
          * @argument {string} value     The value of the property
          */
@@ -732,7 +850,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified value accordingly.
-         * 
+         *
          * @argument {string} value     The value of the property
          */
         formatValue: function (value) {
@@ -748,9 +866,9 @@ nf.Common = (function () {
         },
 
         /**
-         * HTML escapes the specified string. If the string is null 
+         * HTML escapes the specified string. If the string is null
          * or undefined, an empty string is returned.
-         * 
+         *
          * @returns {string}
          */
         escapeHtml: (function () {
@@ -776,7 +894,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified property is sensitive.
-         * 
+         *
          * @argument {object} propertyDescriptor        The property descriptor
          */
         isSensitiveProperty: function (propertyDescriptor) {
@@ -789,7 +907,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified property is required.
-         * 
+         *
          * @param {object} propertyDescriptor           The property descriptor
          */
         isRequiredProperty: function (propertyDescriptor) {
@@ -802,7 +920,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified property is required.
-         * 
+         *
          * @param {object} propertyDescriptor           The property descriptor
          */
         isDynamicProperty: function (propertyDescriptor) {
@@ -815,7 +933,7 @@ nf.Common = (function () {
 
         /**
          * Gets the allowable values for the specified property.
-         * 
+         *
          * @argument {object} propertyDescriptor        The property descriptor
          */
         getAllowableValues: function (propertyDescriptor) {
@@ -828,7 +946,7 @@ nf.Common = (function () {
 
         /**
          * Returns whether the specified property supports EL.
-         * 
+         *
          * @param {object} propertyDescriptor           The property descriptor
          */
         supportsEl: function (propertyDescriptor) {
@@ -840,9 +958,9 @@ nf.Common = (function () {
         },
 
         /**
-         * Formats the specified array as an unordered list. If the array is not an 
+         * Formats the specified array as an unordered list. If the array is not an
          * array, null is returned.
-         * 
+         *
          * @argument {array} array      The array to convert into an unordered list
          */
         formatUnorderedList: function (array) {
@@ -866,7 +984,7 @@ nf.Common = (function () {
          * Extracts the contents of the specified str after the strToFind. If the
          * strToFind is not found or the last part of the str, an empty string is
          * returned.
-         * 
+         *
          * @argument {string} str       The full string
          * @argument {string} strToFind The substring to find
          */
@@ -921,7 +1039,7 @@ nf.Common = (function () {
 
         /**
          * Updates the mouse pointer.
-         * 
+         *
          * @argument {string} domId         The id of the element for the new cursor style
          * @argument {boolean} isMouseOver  Whether or not the mouse is over the element
          */
@@ -966,7 +1084,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified duration.
-         * 
+         *
          * @param {integer} duration in millis
          */
         formatDuration: function (duration) {
@@ -1022,7 +1140,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified number of bytes into a human readable string.
-         * 
+         *
          * @param {integer} dataSize
          * @returns {string}
          */
@@ -1058,7 +1176,7 @@ nf.Common = (function () {
         /**
          * Formats the specified integer as a string (adding commas). At this
          * point this does not take into account any locales.
-         * 
+         *
          * @param {integer} integer
          */
         formatInteger: function (integer) {
@@ -1067,12 +1185,12 @@ nf.Common = (function () {
             while (regex.test(string)) {
                 string = string.replace(regex, '$1' + ',' + '$2');
             }
-            return string;
+            return nf.Common.escapeHtml(string);
         },
 
         /**
-         * Formats the specified float using two demical places.
-         * 
+         * Formats the specified float using two decimal places.
+         *
          * @param {float} f
          */
         formatFloat: function (f) {
@@ -1086,7 +1204,7 @@ nf.Common = (function () {
          * Pads the specified value to the specified width with the specified character.
          * If the specified value is already wider than the specified width, the original
          * value is returned.
-         * 
+         *
          * @param {integer} value
          * @param {integer} width
          * @param {string} character
@@ -1105,7 +1223,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified DateTime.
-         * 
+         *
          * @param {Date} date
          * @returns {String}
          */
@@ -1129,7 +1247,7 @@ nf.Common = (function () {
          * Parses the specified date time into a Date object. The resulting
          * object does not account for timezone and should only be used for
          * performing relative comparisons.
-         * 
+         *
          * @param {string} rawDateTime
          * @returns {Date}
          */
@@ -1173,7 +1291,7 @@ nf.Common = (function () {
 
         /**
          * Parses the specified duration and returns the total number of millis.
-         * 
+         *
          * @param {string} rawDuration
          * @returns {number}        The number of millis
          */
@@ -1196,7 +1314,7 @@ nf.Common = (function () {
 
         /**
          * Parses the specified size.
-         * 
+         *
          * @param {string} rawSize
          * @returns {int}
          */
@@ -1220,7 +1338,7 @@ nf.Common = (function () {
 
         /**
          * Parses the specified count.
-         * 
+         *
          * @param {string} rawCount
          * @returns {int}
          */
@@ -1245,7 +1363,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified object is defined and not null.
-         * 
+         *
          * @argument {object} obj   The object to test
          */
         isDefinedAndNotNull: function (obj) {
@@ -1254,7 +1372,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified object is undefined or null.
-         * 
+         *
          * @param {object} obj      The object to test
          */
         isUndefinedOrNull: function (obj) {
@@ -1263,7 +1381,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified object is undefined.
-         * 
+         *
          * @argument {object} obj   The object to test
          */
         isUndefined: function (obj) {
@@ -1272,7 +1390,7 @@ nf.Common = (function () {
 
         /**
          * Determines whether the specified string is blank (or null or undefined).
-         * 
+         *
          * @argument {string} str   The string to test
          */
         isBlank: function (str) {
@@ -1281,7 +1399,7 @@ nf.Common = (function () {
 
         /**
          * Determines if the specified object is null.
-         * 
+         *
          * @argument {object} obj   The object to test
          */
         isNull: function (obj) {
@@ -1291,7 +1409,7 @@ nf.Common = (function () {
         /**
          * Determines if the specified array is empty. If the specified arg is not an
          * array, then true is returned.
-         * 
+         *
          * @argument {array} arr    The array to test
          */
         isEmpty: function (arr) {
@@ -1301,7 +1419,7 @@ nf.Common = (function () {
         /**
          * Determines if these are the same bulletins. If both arguments are not
          * arrays, false is returned.
-         * 
+         *
          * @param {array} bulletins
          * @param {array} otherBulletins
          * @returns {boolean}
@@ -1325,7 +1443,7 @@ nf.Common = (function () {
 
         /**
          * Formats the specified bulletin list.
-         * 
+         *
          * @argument {array} bulletins      The bulletins
          * @return {array}                  The jQuery objects
          */

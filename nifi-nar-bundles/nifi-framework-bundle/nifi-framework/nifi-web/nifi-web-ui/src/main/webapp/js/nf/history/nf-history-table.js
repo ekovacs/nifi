@@ -294,11 +294,46 @@ nf.HistoryTable = (function () {
                 width: 50,
                 maxWidth: 50
             },
-            {id: 'timestamp', name: 'Date/Time', field: 'timestamp', sortable: true, resizable: true, formatter: valueFormatter},
-            {id: 'sourceName', name: 'Name', field: 'sourceName', sortable: true, resizable: true, formatter: valueFormatter},
-            {id: 'sourceType', name: 'Type', field: 'sourceType', sortable: true, resizable: true, formatter: valueFormatter},
-            {id: 'operation', name: 'Operation', field: 'operation', sortable: true, resizable: true, formatter: valueFormatter},
-            {id: 'userIdentity', name: 'User', field: 'userIdentity', sortable: true, resizable: true, formatter: valueFormatter}
+            {
+                id: 'timestamp',
+                name: 'Date/Time',
+                field: 'timestamp',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
+            {
+                id: 'sourceName',
+                name: 'Name',
+                field: 'sourceName',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
+            {
+                id: 'sourceType',
+                name: 'Type',
+                field: 'sourceType',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
+            {
+                id: 'operation',
+                name: 'Operation',
+                field: 'operation',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            },
+            {
+                id: 'userIdentity',
+                name: 'User',
+                field: 'userIdentity',
+                sortable: true,
+                resizable: true,
+                formatter: valueFormatter
+            }
         ];
         var historyOptions = {
             forceFitColumns: true,

@@ -208,7 +208,7 @@ nf.UsersTable = (function () {
         // get the grid and data
         var usersGrid = $('#users-table').data('gridInstance');
         var usersData = usersGrid.getData();
-        
+
         // create the user
         var userXhr = $.ajax({
             type: 'POST',
@@ -225,7 +225,7 @@ nf.UsersTable = (function () {
                 var groupEntity = usersData.getItemById(selectedGroup.id)
                 xhrs.push(addUserToGroup(groupEntity, userEntity));
             });
-            
+
             $.when.apply(window, xhrs).always(function () {
                 nf.UsersTable.loadUsersTable().done(function () {
                     // select the new user
@@ -268,7 +268,7 @@ nf.UsersTable = (function () {
         });
 
         userXhr.done(function (updatedUserEntity) {
-        
+
             // determine what to add/remove
             var groupsAdded = [];
             var groupsRemoved = [];
@@ -573,7 +573,7 @@ nf.UsersTable = (function () {
                 // not a global policy... check if user has access to the component reference
                 return componentResourceParser(dataContext);
             } else {
-                return '<span class="unset">' + dataContext.id + '</span>';
+                return '<span class="unset">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
             }
         };
 
@@ -615,20 +615,41 @@ nf.UsersTable = (function () {
             var markup = '';
 
             if (dataContext.permissions.canRead === true) {
-                markup += dataContext.component.action;
+                markup += nf.Common.escapeHtml(dataContext.component.action);
             }
 
             return markup;
         };
 
         var userPoliciesColumns = [
-            {id: 'policy', name: 'Policy', sortable: true, resizable: true, formatter: policyDisplayNameFormatter, width: 150},
-            {id: 'action', name: 'Action', sortable: true, resizable: false, formatter: actionFormatter, width: 50}
+            {
+                id: 'policy',
+                name: 'Policy',
+                sortable: true,
+                resizable: true,
+                formatter: policyDisplayNameFormatter,
+                width: 150
+            },
+            {
+                id: 'action',
+                name: 'Action',
+                sortable: true,
+                resizable: false,
+                formatter: actionFormatter,
+                width: 50
+            }
         ];
 
         // add the actions if we're in the shell
         if (top !== window) {
-            userPoliciesColumns.push({id: 'actions', name: '&nbsp;', sortable: false, resizable: false, formatter: actionsFormatter, width: 25});
+            userPoliciesColumns.push({
+                id: 'actions',
+                name: '&nbsp;',
+                sortable: false,
+                resizable: false,
+                formatter: actionsFormatter,
+                width: 25
+            });
         }
 
         var userPoliciesOptions = {
@@ -728,7 +749,7 @@ nf.UsersTable = (function () {
                 markup += '<div class="fa fa-users" style="margin-right: 5px;"></div>';
             }
 
-            markup += dataContext.component.identity;
+            markup += nf.Common.escapeHtml(dataContext.component.identity);
 
             return markup;
         };
@@ -737,12 +758,12 @@ nf.UsersTable = (function () {
         var membersGroupsFormatter = function (row, cell, value, columnDef, dataContext) {
             if (dataContext.type === 'group') {
                 return 'Members: <b>' + dataContext.component.users.map(function (user) {
-                    return user.component.identity;
-                }).join('</b>, <b>') + '</b>';
+                        return nf.Common.escapeHtml(user.component.identity);
+                    }).join('</b>, <b>') + '</b>';
             } else {
                 return 'Member of: <b>' + dataContext.component.userGroups.map(function (group) {
-                    return group.component.identity;
-                }).join('</b>, <b>') + '</b>';
+                        return nf.Common.escapeHtml(group.component.identity);
+                    }).join('</b>, <b>') + '</b>';
             }
         };
 
@@ -765,9 +786,30 @@ nf.UsersTable = (function () {
 
         // initialize the templates table
         var usersColumns = [
-            {id: 'identity', name: 'User', sortable: true, resizable: true, formatter: identityFormatter},
-            {id: 'membersGroups', name: '&nbsp;', sortable: true, defaultSortAsc: false, resizable: true, formatter: membersGroupsFormatter},
-            {id: 'actions', name: '&nbsp;', sortable: false, resizable: false, formatter: actionFormatter, width: 100, maxWidth: 100}
+            {
+                id: 'identity',
+                name: 'User',
+                sortable: true,
+                resizable: true,
+                formatter: identityFormatter
+            },
+            {
+                id: 'membersGroups',
+                name: '&nbsp;',
+                sortable: true,
+                defaultSortAsc: false,
+                resizable: true,
+                formatter: membersGroupsFormatter
+            },
+            {
+                id: 'actions',
+                name: '&nbsp;',
+                sortable: false,
+                resizable: false,
+                formatter: actionFormatter,
+                width: 100,
+                maxWidth: 100
+            }
         ];
         var usersOptions = {
             forceFitColumns: true,
@@ -1038,7 +1080,7 @@ nf.UsersTable = (function () {
 
                 // group id
                 var groupId = $('<span class="group-id hidden"></span>').text(group.id);
-                
+
                 // icon
                 var groupIcon = $('<div class="fa fa-users" style="margin-top: 6px;"></div>');
 

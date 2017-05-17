@@ -624,49 +624,80 @@ nf.ng.ProvenanceTable = function (provenanceLineageCtrl) {
             return markup;
         };
 
-        // initialize the provenance table
-        var provenanceColumns = [
-            {
-                id: 'moreDetails',
-                name: '&nbsp;',
-                sortable: false,
-                resizable: false,
-                formatter: moreDetailsFormatter,
-                width: 50,
-                maxWidth: 50
-            },
-            {
-                id: 'eventTime',
-                name: 'Date/Time',
-                field: 'eventTime',
-                sortable: true,
-                defaultSortAsc: false,
-                resizable: true
-            },
-            {id: 'eventType', name: 'Type', field: 'eventType', sortable: true, resizable: true},
-            {id: 'flowFileUuid', name: 'FlowFile Uuid', field: 'flowFileUuid', sortable: true, resizable: true},
-            {id: 'fileSize', name: 'Size', field: 'fileSize', sortable: true, defaultSortAsc: false, resizable: true},
-            {
-                id: 'componentName',
-                name: 'Component Name',
-                field: 'componentName',
-                sortable: true,
-                resizable: true,
-                formatter: valueFormatter
-            },
-            {id: 'componentType', name: 'Component Type', field: 'componentType', sortable: true, resizable: true}
-        ];
+            // initialize the provenance table
+            var provenanceColumns = [
+                {
+                    id: 'moreDetails',
+                    name: '&nbsp;',
+                    sortable: false,
+                    resizable: false,
+                    formatter: moreDetailsFormatter,
+                    width: 50,
+                    maxWidth: 50
+                },
+                {
+                    id: 'eventTime',
+                    name: 'Date/Time',
+                    field: 'eventTime',
+                    sortable: true,
+                    defaultSortAsc: false,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'eventType',
+                    name: 'Type',
+                    field: 'eventType',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'flowFileUuid',
+                    name: 'FlowFile Uuid',
+                    field: 'flowFileUuid',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'fileSize',
+                    name: 'Size',
+                    field: 'fileSize',
+                    sortable: true,
+                    defaultSortAsc: false,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'componentName',
+                    name: 'Component Name',
+                    field: 'componentName',
+                    sortable: true,
+                    resizable: true,
+                    formatter: valueFormatter
+                },
+                {
+                    id: 'componentType',
+                    name: 'Component Type',
+                    field: 'componentType',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                }
+            ];
 
-        // conditionally show the cluster node identifier
-        if (isClustered) {
-            provenanceColumns.push({
-                id: 'clusterNodeAddress',
-                name: 'Node',
-                field: 'clusterNodeAddress',
-                sortable: true,
-                resizable: true
-            });
-        }
+            // conditionally show the cluster node identifier
+            if (isClustered) {
+                provenanceColumns.push({
+                    id: 'clusterNodeAddress',
+                    name: 'Node',
+                    field: 'clusterNodeAddress',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                });
+            }
 
         // conditionally show the action column
         if (nf.Common.SUPPORTS_SVG || isInShell) {

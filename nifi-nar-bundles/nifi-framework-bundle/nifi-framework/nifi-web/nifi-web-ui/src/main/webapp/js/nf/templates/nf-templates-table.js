@@ -226,15 +226,15 @@ nf.TemplatesTable = (function () {
                     return '';
                 }
 
-                return dataContext.template.timestamp;
+                return nf.Common.escapeHtml(dataContext.template.timestamp);
             };
 
             var nameFormatter = function (row, cell, value, columnDef, dataContext) {
                 if (!dataContext.permissions.canRead) {
-                    return '<span class="blank">' + dataContext.id + '</span>';
+                    return '<span class="blank">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
                 }
 
-                return dataContext.template.name;
+                return nf.Common.escapeHtml(dataContext.template.name);
             };
 
             var descriptionFormatter = function (row, cell, value, columnDef, dataContext) {
@@ -250,7 +250,7 @@ nf.TemplatesTable = (function () {
                     return '';
                 }
 
-                return dataContext.template.groupId;
+                return nf.Common.escapeHtml(dataContext.template.groupId);
             };
 
             // function for formatting the actions column
@@ -278,11 +278,46 @@ nf.TemplatesTable = (function () {
 
             // initialize the templates table
             var templatesColumns = [
-                {id: 'timestamp', name: 'Date/Time', sortable: true, defaultSortAsc: false, resizable: false, formatter: timestampFormatter, width: 225, maxWidth: 225},
-                {id: 'name', name: 'Name', sortable: true, resizable: true, formatter: nameFormatter},
-                {id: 'description', name: 'Description', sortable: true, resizable: true, formatter: descriptionFormatter},
-                {id: 'groupId', name: 'Process Group Id', sortable: true, resizable: true, formatter: groupIdFormatter},
-                {id: 'actions', name: '&nbsp;', sortable: false, resizable: false, formatter: actionFormatter, width: 100, maxWidth: 100}
+                {
+                    id: 'timestamp',
+                    name: 'Date/Time',
+                    sortable: true,
+                    defaultSortAsc: false,
+                    resizable: false,
+                    formatter: timestampFormatter,
+                    width: 225,
+                    maxWidth: 225
+                },
+                {
+                    id: 'name',
+                    name: 'Name',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nameFormatter
+                },
+                {
+                    id: 'description',
+                    name: 'Description',
+                    sortable: true,
+                    resizable: true,
+                    formatter: descriptionFormatter
+                },
+                {
+                    id: 'groupId',
+                    name: 'Process Group Id',
+                    sortable: true,
+                    resizable: true,
+                    formatter: groupIdFormatter
+                },
+                {
+                    id: 'actions',
+                    name: '&nbsp;',
+                    sortable: false,
+                    resizable: false,
+                    formatter: actionFormatter,
+                    width: 100,
+                    maxWidth: 100
+                }
             ];
             var templatesOptions = {
                 forceFitColumns: true,

@@ -265,8 +265,22 @@ nf.ComponentState = (function () {
 
             // initialize the queue listing table
             var componentStateColumns = [
-                {id: 'key', field: 'key', name: 'Key', sortable: true, resizable: true},
-                {id: 'value', field: 'value', name: 'Value', sortable: true, resizable: true}
+                {
+                    id: 'key',
+                    field: 'key',
+                    name: 'Key',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                },
+                {
+                    id: 'value',
+                    field: 'value',
+                    name: 'Value',
+                    sortable: true,
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
+                }
             ];
 
             // conditionally show the cluster node identifier
@@ -276,7 +290,8 @@ nf.ComponentState = (function () {
                     field: 'scope',
                     name: 'Scope',
                     sortable: true,
-                    resizable: true
+                    resizable: true,
+                    formatter: nf.Common.genericValueFormatter
                 });
             }
 

@@ -84,15 +84,93 @@ nf.ClusterTable = (function () {
         tabContentId: 'cluster-jvm-tab-content',
         tableId: 'cluster-jvm-table',
         tableColumnModel: [
-            {id: 'node', field: 'node', name: 'Node Address', sortable: true, resizable: true},
-            {id: 'heapMax', field: 'maxHeap', name: 'Heap Max', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'heapTotal', field: 'totalHeap', name: 'Heap Total', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'heapUsed', field: 'usedHeap', name: 'Heap Used', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'heapUtilPct', field: 'heapUtilization', name: 'Heap Utilization', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'nonHeapTotal', field: 'totalNonHeap', name: 'Non-Heap Total', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'nonHeapUsed', field: 'usedNonHeap', name: 'Non-Heap Used', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'gcOldGen', field: 'gcOldGen', name: 'G1 Old Generation', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'gcNewGen', field: 'gcNewGen', name: 'G1 Young Generation', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'}
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapMax',
+                field: 'maxHeap',
+                name: 'Heap Max',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapTotal',
+                field: 'totalHeap',
+                name: 'Heap Total',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapUsed',
+                field: 'usedHeap',
+                name: 'Heap Used',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapUtilPct',
+                field: 'heapUtilization',
+                name: 'Heap Utilization',
+                sortable: true, resizable:
+                true, cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'nonHeapTotal',
+                field: 'totalNonHeap',
+                name: 'Non-Heap Total',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'nonHeapUsed',
+                field: 'usedNonHeap',
+                name: 'Non-Heap Used',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'gcOldGen',
+                field: 'gcOldGen',
+                name: 'G1 Old Generation',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'gcNewGen',
+                field: 'gcNewGen',
+                name: 'G1 Young Generation',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            }
         ],
         tableIdColumn: 'id',
         tableOptions: commonTableOptions,
@@ -115,11 +193,54 @@ nf.ClusterTable = (function () {
         tabContentId: 'cluster-system-tab-content',
         tableId: 'cluster-system-table',
         tableColumnModel: [
-            {id: 'node', field: 'node', name: 'Node Address', sortable: true, resizable: true},
-            {id: 'processors', field: 'processors', name: 'Processors', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'processorLoadAverage', field: 'processorLoadAverage', name: 'Processor Load Average', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'totalThreads', field: 'totalThreads', name: 'Total Threads', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'daemonThreads', field: 'daemonThreads', name: 'Daemon Threads', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'}
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'processors',
+                field: 'processors',
+                name: 'Processors',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'processorLoadAverage',
+                field: 'processorLoadAverage',
+                name: 'Processor Load Average',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'totalThreads',
+                field: 'totalThreads',
+                name: 'Total Threads',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'daemonThreads',
+                field: 'daemonThreads',
+                name: 'Daemon Threads',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            }
         ],
         tableIdColumn: 'id',
         tableOptions: commonTableOptions,
@@ -142,11 +263,54 @@ nf.ClusterTable = (function () {
         tabContentId: 'cluster-flowfile-tab-content',
         tableId: 'cluster-flowfile-table',
         tableColumnModel: [
-            {id: 'node', field: 'node', name: 'Node Address', sortable: true, resizable: true},
-            {id: 'ffRepoTotal', field: 'ffRepoTotal', name: 'Total Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'ffRepoUsed', field: 'ffRepoUsed', name: 'Used Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'ffRepoFree', field: 'ffRepoFree', name: 'Free Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'ffStoreUtil', field: 'ffRepoUtil', name: 'Utilization', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'}
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'ffRepoTotal',
+                field: 'ffRepoTotal',
+                name: 'Total Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'ffRepoUsed',
+                field: 'ffRepoUsed',
+                name: 'Used Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'ffRepoFree',
+                field: 'ffRepoFree',
+                name: 'Free Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'ffStoreUtil',
+                field: 'ffRepoUtil',
+                name: 'Utilization',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            }
         ],
         tableIdColumn: 'id',
         tableOptions: commonTableOptions,
@@ -169,12 +333,62 @@ nf.ClusterTable = (function () {
         tabContentId: 'cluster-content-tab-content',
         tableId: 'cluster-content-table',
         tableColumnModel: [
-            {id: 'node', field: 'node', name: 'Node Address', sortable: true, resizable: true},
-            {id: 'contentRepoId', field: 'contentRepoId', name: 'Content Repository', sortable: true, resizable: true},
-            {id: 'contentRepoTotal', field: 'contentRepoTotal', name: 'Total Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'contentRepoUsed', field: 'contentRepoUsed', name: 'Used Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'contentRepoFree', field: 'contentRepoFree', name: 'Free Space', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'},
-            {id: 'contentRepoUtil', field: 'contentRepoUtil', name: 'Utilization', sortable: true, resizable: true, cssClass: 'cell-right', headerCssClass: 'header-right'}
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'contentRepoId',
+                field: 'contentRepoId',
+                name: 'Content Repository',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'contentRepoTotal',
+                field: 'contentRepoTotal',
+                name: 'Total Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'contentRepoUsed',
+                field: 'contentRepoUsed',
+                name: 'Used Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'contentRepoFree',
+                field: 'contentRepoFree',
+                name: 'Free Space',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'contentRepoUtil',
+                field: 'contentRepoUtil',
+                name: 'Utilization',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            }
         ],
         tableIdColumn: 'id',
         tableOptions: commonTableOptions,
@@ -200,13 +414,62 @@ nf.ClusterTable = (function () {
         tabContentId: 'cluster-version-tab-content',
         tableId: 'cluster-version-table',
         tableColumnModel: [
-            {id: 'node', field: 'node', name: 'Node Address', sortable: true, resizable: true},
-            {id: 'version', field: 'version', name: 'NiFi Version', sortable: true, resizable: true},
-            {id: 'javavendor', field: 'javaVendor', name: 'Java Vendor', sortable: true, resizable: true},
-            {id: 'javaversion', field: 'javaVersion', name: 'Java Version', sortable: true, resizable: true},
-            {id: 'osname', field: 'osName', name: 'OS Name', sortable: true, resizable: true},
-            {id: 'osversion', field: 'osVersion', name: 'OS Version', sortable: true, resizable: true},
-            {id: 'osarch', field: 'osArchitecture', name: 'OS Architecture', sortable: true, resizable: true}
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'version',
+                field: 'version',
+                name: 'NiFi Version',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'javavendor',
+                field: 'javaVendor',
+                name: 'Java Vendor',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'javaversion',
+                field: 'javaVersion',
+                name: 'Java Version',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'osname',
+                field: 'osName',
+                name: 'OS Name',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'osversion',
+                field: 'osVersion',
+                name: 'OS Version',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'osarch',
+                field: 'osArchitecture',
+                name: 'OS Architecture',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            }
         ],
         tableIdColumn: 'id',
         tableOptions: commonTableOptions,
@@ -267,13 +530,67 @@ nf.ClusterTable = (function () {
         };
 
         var columnModel = [
-            {id: 'moreDetails', name: '&nbsp;', sortable: false, resizable: false, formatter: moreDetailsFormatter, width: 50, maxWidth: 50},
-            {id: 'formattedNodeAddress', field: 'formattedNodeAddress', name: 'Node Address', formatter: nodeFormatter, resizable: true, sortable: true},
-            {id: 'activeThreadCount', field: 'activeThreadCount', name: 'Active Thread Count', resizable: true, sortable: true, defaultSortAsc: false},
-            {id: 'queued', field: 'queued', name: '<span class="queued-title">Queue</span>&nbsp;/&nbsp;<span class="queued-size-title">Size</span>', resizable: true, sortable: true, defaultSortAsc: false},
-            {id: 'status', field: 'status', name: 'Status', formatter: statusFormatter, resizable: true, sortable: true},
-            {id: 'uptime', field: 'nodeStartTime', name: 'Uptime', formatter: valueFormatter, resizable: true, sortable: true, defaultSortAsc: false},
-            {id: 'heartbeat', field: 'heartbeat', name: 'Last Heartbeat', formatter: valueFormatter, resizable: true, sortable: true, defaultSortAsc: false}
+            {
+                id: 'moreDetails',
+                name: '&nbsp;',
+                sortable: false,
+                resizable: false,
+                formatter: moreDetailsFormatter,
+                width: 50,
+                maxWidth: 50
+            },
+            {
+                id: 'formattedNodeAddress',
+                field: 'formattedNodeAddress',
+                name: 'Node Address',
+                formatter: nodeFormatter,
+                resizable: true,
+                sortable: true
+            },
+            {
+                id: 'activeThreadCount',
+                field: 'activeThreadCount',
+                name: 'Active Thread Count',
+                resizable: true,
+                sortable: true,
+                defaultSortAsc: false,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'queued',
+                field: 'queued',
+                name: '<span class="queued-title">Queue</span>&nbsp;/&nbsp;<span class="queued-size-title">Size</span>',
+                resizable: true,
+                sortable: true,
+                defaultSortAsc: false,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'status',
+                field: 'status',
+                name: 'Status',
+                formatter: statusFormatter,
+                resizable: true,
+                sortable: true
+            },
+            {
+                id: 'uptime',
+                field: 'nodeStartTime',
+                name: 'Started At',
+                formatter: valueFormatter,
+                resizable: true,
+                sortable: true,
+                defaultSortAsc: false
+            },
+            {
+                id: 'heartbeat',
+                field: 'heartbeat',
+                name: 'Last Heartbeat',
+                formatter: valueFormatter,
+                resizable: true,
+                sortable: true,
+                defaultSortAsc: false
+            }
         ];
 
         // only allow the admin to modify the cluster
@@ -306,6 +623,142 @@ nf.ClusterTable = (function () {
         }
 
         return columnModel;
+    }
+
+    /**
+     * Click handler for the Nodes table options.
+     */
+    function createJvmTableOnEnterHandler(grid) {
+        var data = grid.getData();
+
+        return function (e) {
+            var jvmGc = $(this).find('div.show-jvm-gc');
+            if (jvmGc.length && !jvmGc.data('qtip')) {
+                var rowId = $(this).find('span.row-id').text();
+
+                // get the status item
+                var item = data.getItemById(rowId);
+
+                // generate the markup
+                var garbageCollections = nf.Common.getFormattedGarbageCollections(item.garbageCollection);
+                var tooltip = nf.Common.formatUnorderedList(garbageCollections);
+
+                // show the tooltip
+                if (nf.Common.isDefinedAndNotNull(tooltip)) {
+                    jvmGc.qtip($.extend({}, nf.Common.config.tooltipConfig, {
+                        content: tooltip,
+                        position: {
+                            container: $('#cluster'),
+                            at: 'bottom left',
+                            my: 'top right',
+                            adjust: {
+                                x: 4,
+                                y: 4
+                            }
+                        }
+                    }));
+                }
+            }
+        };
+    }
+
+    function cleanUpJvmTable(table) {
+        nf.Common.cleanUpTooltips(table, 'div.show-jvm-gc');
+    }
+
+    function createJvmTableColumnModel() {
+        var gcFormatter = function (row, cell, value, columnDef, dataContext) {
+            return '<div class="pointer show-jvm-gc fa fa-question-circle" style="margin-top: 2px;"></div><span class="hidden row-id">' + nf.Common.escapeHtml(dataContext.id) + '</span>';
+        };
+
+        return [
+            {
+                id: 'node',
+                field: 'node',
+                name: 'Node Address',
+                sortable: true,
+                resizable: true,
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapMax',
+                field: 'maxHeap',
+                name: 'Heap Max',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapTotal',
+                field: 'totalHeap',
+                name: 'Heap Total',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapUsed',
+                field: 'usedHeap',
+                name: 'Heap Used',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'heapUtilPct',
+                field: 'heapUtilization',
+                name: 'Heap Utilization',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'nonHeapTotal',
+                field: 'totalNonHeap',
+                name: 'Non-Heap Total',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right'
+            },
+            {
+                id: 'nonHeapUsed',
+                field: 'usedNonHeap',
+                name: 'Non-Heap Used',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            },
+            {
+                id: 'gc',
+                name: 'GC',
+                sortable: false,
+                resizable: true,
+                formatter: gcFormatter,
+                width: 50,
+                maxWidth: 50
+            },
+            {
+                id: 'uptime',
+                field: 'uptime',
+                name: 'Uptime',
+                sortable: true,
+                resizable: true,
+                cssClass: 'cell-right',
+                headerCssClass: 'header-right',
+                formatter: nf.Common.genericValueFormatter
+            }
+        ];
     }
 
     var prevColumn, count;
@@ -414,7 +867,7 @@ nf.ClusterTable = (function () {
         if (node.roles.includes(config.clusterCoordinator)) {
             markup += ', COORDINATOR';
         }
-        return markup;
+        return nf.Common.escapeHtml(markup);
     }
 
     /**

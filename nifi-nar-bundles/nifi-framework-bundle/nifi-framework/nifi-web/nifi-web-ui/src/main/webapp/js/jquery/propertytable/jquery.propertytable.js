@@ -1205,7 +1205,14 @@
 
             return markup;
         };
-        propertyColumns.push({id: "actions", name: "&nbsp;", minWidth: 20, width: 20, formatter: actionFormatter});
+        propertyColumns.push(
+            {
+                id: "actions",
+                name: "&nbsp;",
+                minWidth: 20,
+                width: 20,
+                formatter: actionFormatter
+            });
 
         var propertyConfigurationOptions = {
             forceFitColumns: true,

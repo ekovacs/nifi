@@ -510,7 +510,7 @@ nf.ControllerServices = (function () {
 
         if (nf.Common.isDefinedAndNotNull(dataContext.component.parentGroupId)) {
             // see if this listing is based off a selected process group
-            var selection = nfCanvasUtils.getSelection();
+            var selection = nf.CanvasUtils.getSelection();
             if (selection.empty() === false) {
                 var selectedData = selection.datum();
                 if (selectedData.id === dataContext.component.parentGroupId) {
@@ -523,7 +523,7 @@ nf.ControllerServices = (function () {
             }
 
             // there's either no selection or the service is defined in an ancestor component
-            var breadcrumbs = nfNgBridge.injector.get('breadcrumbsCtrl').getBreadcrumbs();
+            var breadcrumbs = nf.ng.Bridge.injector.get('breadcrumbsCtrl').getBreadcrumbs();
 
             var processGroupLabel = dataContext.component.parentGroupId;
             $.each(breadcrumbs, function (_, breadcrumbEntity) {
